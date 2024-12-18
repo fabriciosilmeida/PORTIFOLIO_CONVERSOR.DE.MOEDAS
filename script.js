@@ -21,18 +21,20 @@ function changeCurrency(){
     convertValues()
 }
 
-// Botao de acinomento para converter moedas
+// Botao de acionamento para converter moedas
 const convertButton = document.querySelector("#convert-button")
 convertButton.addEventListener("click", convertValues)
 
 // Codigo para converção de moedas
-function convertValues() {
+async function convertValues() {
     const inputCurrencyValue = document.querySelector("#input-currency").value
     const currencyValueToConvert = document.querySelector("#currency-value-to-convert")
     const currencyValueConverted = document.querySelector("#currency-value-converted")
 
-    const dolarToday = 6.04
-    const euroToday  = 6.36
+    const currencyToday = await valueCurrency()
+
+    const dolarToday = currencyToday.USDBRL.ask
+    const euroToday  = currencyToday.EURBRL.ask
 
     // Valor de representação do Real Brasileiro
     currencyValueToConvert.innerHTML = new Intl.NumberFormat("pt-BR", {
@@ -55,4 +57,10 @@ function convertValues() {
             }).format(inputCurrencyValue / euroToday)
             break;
     }
+}
+
+// Pegando valor de moedas em tempo real
+async function valueCurrency(){
+    const url = "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL"
+    return await fetch(url).then(response => response.json()) 
 }
